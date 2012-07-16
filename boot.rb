@@ -1,22 +1,21 @@
 require 'rubygems'
+require "logger"
 require 'bundler/setup'
-
-Bundler.require
+Bundler.require :default
 
 $:.push File.expand_path('./', File.dirname(__FILE__))
 
 require "core/server"
 require "core/debug_interface"
+require "core/connection"
 
 at_exit do
   if $!.nil? || $!.is_a?(SystemExit) && $!.success?
-    puts "Finished..."
+    Server.logger.info "Finished..."
   else
+    Server.logger.error $!.to_s
+    Server.logger.error $!.backtrace.join("\n")
     $server.stop
-    File.open("error.log", 'w') do |f| 
-      f.write($!.to_s)
-      f.write($!.backtrace.join("\n"))
-    end
   end
 end
 
