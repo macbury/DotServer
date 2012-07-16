@@ -1,0 +1,29 @@
+Version = "0.1"
+#https://github.com/rubyist/aasm/
+#https://github.com/seanohalpin/ffi-ncurses/tree/master/examples
+class Command
+  Ping = 0x0000;
+end
+
+RandChannel = EM::Channel.new
+
+class EchoServer < EM::Connection
+   def post_init
+     puts "-- someone connected to the echo server!"
+     @sid = RandChannel.subscribe { |m| send_data "#{m.inspect}\n" }
+   end
+
+   def receive_data(data)
+     send_data ">>>you sent: #{data}"
+     close_connection if data =~ /quit/i
+   end
+
+   def unbind
+     puts "-- someone disconnected from the echo server!"
+     RandChannel.unsubscribe @sid
+  end
+end
+
+  EventMachine::PeriodicTimer.new(1) do
+    RandChannel << [Time.now]
+  end
