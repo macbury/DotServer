@@ -56,15 +56,14 @@ class DebugInterface
   end
 
   def render_ui
-    #Ncurses.move 0,0
-    #Ncurses.addstr("Hello at D.T!")
-    #Ncurses.move 1,0
-    #Ncurses.addstr("Current server time: #{Time.now.to_s}")
-    #Ncurses.refresh
     @stat_window.move 1,2
     @stat_window.addstr "time: #{Time.now.to_s}"
     @stat_window.move 2,2
     @stat_window.addstr "uptime: #{self.uptime} min"
+    @stat_window.move 3,2
+    @stat_window.addstr "environment: #{Server.env}, ip: #{Server.listen}, port: #{Server.port}"
+    @stat_window.move 4,2
+    @stat_window.addstr "Connections: #{Server.connections.size}"
     @stat_window.wrefresh
   end
 

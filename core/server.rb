@@ -1,9 +1,14 @@
 class Server
   
   def initialize(options)
-    @options   = options
-    Server.env = options[:env] || "production"
+    @@connections = []
+    @options      = options
+    @@port        = @options[:port] 
+    @@listen      = @options[:listen]
+    Server.env    = @options[:env] || "production"
+    
     Log.server.info "Starting server #{Server.env}"
+
     @debug_interface = DebugInterface.new(self)
     Signal.trap("INT")  { stop }
     Signal.trap("TERM") { stop }
@@ -11,8 +16,8 @@ class Server
   end
 
   def start
-    EventMachine::start_server @options[:listen], @options[:port], Connection
-    Log.server.info "Listening on #{@options[:listen]}:#{@options[:port]}"
+    EventMachine::start_server Server.listen, Server.port, Connection
+    Log.server.info "Listening on #{Server.listen}:#{Server.port}"
   end
 
   def enterDebugMode
@@ -34,8 +39,20 @@ class Server
     @@env
   end
 
+  def self.port
+    @@port
+  end
+
+  def self.listen
+    @@listen
+  end
+
   def self.env=(new_env)
     @@env = new_env
+  end
+
+  def self.connections
+    @@connections
   end
 end
 

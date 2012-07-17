@@ -8,4 +8,5 @@ gem "Ascii85", require: "ascii85"
 
 group :test do
   gem "rspec"
+  gem 'em-spec'
 end
