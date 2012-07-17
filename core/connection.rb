@@ -1,6 +1,6 @@
 class Connection < EM::Connection
   def post_init
-    Server.logger.info "New connection"
+    Log.server.info "New connection"
   end
 
   def receive_data(data)
@@ -9,6 +9,6 @@ class Connection < EM::Connection
   end
 
   def unbind
-    Server.logger.info "Connection closed"
+    Log.server.info "Connection closed"
   end
 end

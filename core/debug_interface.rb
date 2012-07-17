@@ -1,8 +1,9 @@
 require "ncurses"
-class DebugInterface
 
+class DebugInterface
   def initialize(server)
-    @server = server
+    @server     = server
+    @start_time = Time.now
   end
 
   def start
@@ -12,6 +13,9 @@ class DebugInterface
   def stop
     if @interface_thread
       @refresh_timer.cancel if @refresh_timer
+      Ncurses.echo
+      Ncurses.nocbreak
+      Ncurses.nl
       Ncurses.endwin
       @interface_thread.exit
       @interface_thread = nil
@@ -26,8 +30,17 @@ class DebugInterface
     Ncurses.scrollok(Ncurses.stdscr, true)
     Ncurses.keypad(Ncurses.stdscr, true)
     Ncurses.clear
+    init_stat_window
     updateUI
     @refresh_timer = EventMachine::PeriodicTimer.new(1) { updateUI }
+  end
+
+  def init_stat_window
+    @stat_window = Ncurses::WINDOW.new(6, 80, 0, 0)
+    @stat_window.bkgd(Ncurses.COLOR_PAIR(3))
+    @stat_window.box(0, 0)
+    @stat_window.mvaddstr(0, 0, "DoT server: running ")
+    @stat_window.wrefresh()
   end
 
   def updateUI
@@ -43,10 +56,19 @@ class DebugInterface
   end
 
   def render_ui
-    Ncurses.move 0,0
-    Ncurses.addstr("Hello at D.T!")
-    Ncurses.move 1,0
-    Ncurses.addstr("Current server time: #{Time.now.to_s}")
-    Ncurses.refresh
+    #Ncurses.move 0,0
+    #Ncurses.addstr("Hello at D.T!")
+    #Ncurses.move 1,0
+    #Ncurses.addstr("Current server time: #{Time.now.to_s}")
+    #Ncurses.refresh
+    @stat_window.move 1,2
+    @stat_window.addstr "time: #{Time.now.to_s}"
+    @stat_window.move 2,2
+    @stat_window.addstr "uptime: #{self.uptime} min"
+    @stat_window.wrefresh
+  end
+
+  def uptime
+    (Time.now - @start_time).round / 60
   end
 end
