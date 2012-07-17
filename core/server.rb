@@ -2,7 +2,8 @@ class Server
   
   def initialize(options)
     @options = options
-    Log.server.info "Starting server"
+    @@env    = options[:env] || "production"
+    Log.server.info "Starting server #{@env}"
     @debug_interface = DebugInterface.new(self)
     Signal.trap("INT")  { stop }
     Signal.trap("TERM") { stop }
@@ -25,12 +26,12 @@ class Server
     EventMachine.stop
   end
 
-  def self.logger
-    @@logger
-  end
-
   def self.connections
     @@connections ||= []
+  end
+
+  def self.env
+    @@env
   end
 end
 

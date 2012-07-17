@@ -1,3 +1,11 @@
+1.0 Wiadomość
+==============================
+Każda wiadomość zaczyna się od MESSAGE_DELIMETER_START i kończy się MESSAGE_DELIMETER_END. Zawartość między tymi delimeterami jest zwyczajnym tekstem z zamienionymi MESSAGE_DELIMETER_START i MESSAGE_DELIMETER_END na MESSAGE_DELIMETER_START_PLACEHOLDER i MESSAGE_DELIMETER_END_PLACEHOLDER.
+
+Kiedy otrzymuję MESSAGE_DELIMETER_START tworzę nowy obiekt Message i:
+  a) jeżeli dostałem MESSAGE_DELIMETER_END zamykam message i go wrzucam na kolejke do wykonania z przypisanym polączeniem
+  b) po upływie MESSAGE_TIMEOUT wiadomość jest zamykana i usuwana
+  c) dodaję zawartość nadchodzących danych do message.
 
 1.1 Połączenie i logowanie
 ==============================
@@ -26,9 +34,25 @@ Serwer oczekuje aby klient pingowal go co max. 40 sekund, jeżeli czas zostanie 
 
 Klient dostaje informacje o mapie na której przebywa i jego pozycji. Otwiera on mape i ustawia się w danej pozycji. Gracz teraz może zaczynać się poruszać.
 
-
-Server Loop
+1.3 Server Loop
 ==============================
-Jeżeli jakiś gracz nie ma aktywnego połączenia jest usuwany z mapy.
-Jeżeli gracz ma ustawione połączenie z statusem timeout, usuwa on połączenie z gracza
-Jeżeli gracz ma ustawione połączenie z statusem unauthorized, usuwa on połączenie z gracza
+Świat aktualizuje się SERVER_UPDATE razy w ciągu sekundy. Przy każdej aktualizacji:
+  Jeżeli jest w trybie debugowania i otrzymał sygnał do przeładowania:
+    Zapisanie stanu playerów, npc i mobów
+    Przeładowanie wszystkich plików i klas, npc itp
+    Wczytanie stanu
+  Sprawdzenie statusu połączenia
+  Jeżeli jakiś gracz nie ma aktywnego połączenia jest usuwany z mapy.
+
+1.4 Połączenie
+==============================
+Każde połączenie może być przypisane do gracza i mieć wiele wiadomości. Po połączenia gracz jest usuwany i wszystkie jego wiadomości. 
+Kiedy sprawdzam status połączenia to:
+  Jeżeli połączenie ma status timeout, jest usuwane.
+  Jeżeli połączenie ma status unauthorized, jest usuwane.
+  Jeżeli połączenie ma status finished, jest usuwane.
+  Jeżeli połączenie ma status disconnected, jest usuwane.
+
+Connection Flow
+  idle > authorization > game > finished
+
