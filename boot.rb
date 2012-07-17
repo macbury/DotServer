@@ -1,4 +1,6 @@
 require 'rubygems'
+require 'logger'
+require 'yaml'
 require 'bundler/setup'
 
 Bundler.require :default
@@ -6,6 +8,7 @@ Bundler.require :default
 $:.push File.expand_path('./', File.dirname(__FILE__))
 
 require "core/log"
+require "core/core_object"
 require "core/at_exit"
 require "core/server"
 require "core/debug_interface"

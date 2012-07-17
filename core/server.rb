@@ -1,9 +1,9 @@
 class Server
   
   def initialize(options)
-    @options = options
-    @@env    = options[:env] || "production"
-    Log.server.info "Starting server #{@env}"
+    @options   = options
+    Server.env = options[:env] || "production"
+    Log.server.info "Starting server #{Server.env}"
     @debug_interface = DebugInterface.new(self)
     Signal.trap("INT")  { stop }
     Signal.trap("TERM") { stop }
@@ -32,6 +32,10 @@ class Server
 
   def self.env
     @@env
+  end
+
+  def self.env=(new_env)
+    @@env = new_env
   end
 end
 
