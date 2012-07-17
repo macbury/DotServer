@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+require File.expand_path('boot.rb', File.dirname(__FILE__))
+
+class ServerCommand < Thor
+  desc "start", "start the server"
+  options debug:    false
+  options port:     15000
+  options listen:   "0.0.0.0"
+  options demonize: false
+  def start
+    throw "demonize unsupported for now time" if options[:demonize]
+    EventMachine::run do
+      $server = Server.new(options)
+      $server.enterDebugMode if options[:debug]
+      $server.start
+    end
+  end
+end
+
+ServerCommand.start

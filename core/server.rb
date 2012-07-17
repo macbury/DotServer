@@ -1,6 +1,7 @@
 class Server
   @@logger = Logger.new(File.open('./log/server.log', File::WRONLY | File::APPEND))
-  def initialize
+  def initialize(options)
+    @options = options
     Server.logger.info "Starting server"
     @debug_interface = DebugInterface.new(self)
     Signal.trap("INT")  { stop }
@@ -9,8 +10,8 @@ class Server
   end
 
   def start
-    EventMachine::start_server "0.0.0.0", 15001, Connection
-    Server.logger.info "Listening on 0.0.0.0"
+    EventMachine::start_server @options[:listen], @options[:port], Connection
+    Server.logger.info "Listening on #{@options[:listen]}:#{@options[:port]}"
   end
 
   def enterDebugMode
