@@ -1,0 +1,34 @@
+
+1.1 Połączenie i logowanie
+==============================
+Klient uruchamia aplikacje i widzi okno logowania, wpisuje login i hasło i klika połącz.
+Klient łączy się z serwerem i wysyła login, hasło oraz wersje klienta
+Serwer:
+  a) jeżeli ilość graczy wynosi maxymalna ilosć serwer wysyla komunikato o tym fakcie i zamyka połączenie
+  b) jeżeli wersja klienta jest o kant dupy rozbić wyślij komunikat o tym fakcie wraz z wymaganą wersją klienta i zamknij połączenie
+  c) jeżeli login i hasło są poprawne wysyła komunikat o statusie ingame i przechodzi do kroku 1.2
+  d) jeżeli login i hasło są niepoprawne wysyłany jest komunikat o tym z prośbą ponownego połączenia, następuje rozłączenie
+  e) klient nie wykonał wszystkiego w czasie AUTHORIZATION_TIMEOUT zostaje rozłączony
+Klient
+  a) otrzymuje informacje o maxymalnej ilosci graczy, wyswietla komunikat o tym fakcie, rozlacza i przechodzi do ekranu glownego
+  b) otrzymuje informacje o chujowym kliencie wyświetla komunikat o tym fakcie z prośbą pobrania adekwatnej wersji
+  c) otrzymuje informacje o poprawnym logowaniu i przechodzi do kroku 1.2
+  d) musi ponownie wprowadzić login i hasło
+  e) następuje rozłączenie
+
+
+1.2 Wczytywanie świata itp
+==============================
+Serwer dokonał autoryzacji połączenia i szuka gracza o podanych danych i przypsuje mu następujące połączenie. Następnie sprawdza na której mapie był on ostatnio i wysyła jego współrzędne wraz id mapy, po czym spawnuje go na tej mapie.
+
+Klient dostaje informacje o poprawnym logowaniu i zaczyna pingować serwer co 5 sekund.
+Serwer oczekuje aby klient pingowal go co max. 40 sekund, jeżeli czas zostanie przekroczony połączenie jest zrywane, a gracz przestaje mieć je przypisane.
+
+Klient dostaje informacje o mapie na której przebywa i jego pozycji. Otwiera on mape i ustawia się w danej pozycji. Gracz teraz może zaczynać się poruszać.
+
+
+Server Loop
+==============================
+Jeżeli jakiś gracz nie ma aktywnego połączenia jest usuwany z mapy.
+Jeżeli gracz ma ustawione połączenie z statusem timeout, usuwa on połączenie z gracza
+Jeżeli gracz ma ustawione połączenie z statusem unauthorized, usuwa on połączenie z gracza
