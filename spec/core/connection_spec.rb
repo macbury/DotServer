@@ -9,6 +9,11 @@ describe Connection do
     Server.stub(:connections).and_return([])
   end
   
+  it "should idle state on start" do
+    connection                      = Connection.new(0)
+    connection.current_state.should be(:idle)
+  end
+
   it "should handle incoming message in one packet" do
     send_message                    = Message.build("foo", "bar", "a" => "b")
     connection                      = Connection.new(0)
