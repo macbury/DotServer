@@ -15,11 +15,11 @@ class Message
   def self.parse(message_string)
     message_string.gsub!(MESSAGE_DELIMETER_START, '')
     message_string.gsub!(MESSAGE_DELIMETER_END, '')
-    output = YAML.load(Ascii85.decode(message_string))
+    output                   = JSON.parse(Ascii85.decode(message_string))
     message                  = Message.new
-    message.action_name      = output[:action]
-    message.controller_name  = output[:controller]
-    message.params           = output[:params]
+    message.action_name      = output["action"]
+    message.controller_name  = output["controller"]
+    message.params           = output["params"]
     message
   end
 
@@ -30,6 +30,6 @@ class Message
       params:     self.params
     }
 
-    [Message::MESSAGE_DELIMETER_START, Ascii85.encode(out.to_yaml), Message::MESSAGE_DELIMETER_END].join("")
+    [Message::MESSAGE_DELIMETER_START, Ascii85.encode(out.to_json), Message::MESSAGE_DELIMETER_END].join("")
   end
 end

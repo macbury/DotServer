@@ -4,6 +4,7 @@ gem "eventmachine"
 gem "ncurses-ruby", require: false
 gem "thor"
 gem "aasm"
+gem "json"
 gem "Ascii85", require: "ascii85"
 
 group :test do
