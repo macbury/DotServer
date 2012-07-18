@@ -6,8 +6,7 @@ class Server
     @options      = options
     @@port        = @options[:port] 
     @@listen      = @options[:listen]
-    Server.env    = @options[:env] || "production"
-    
+    @@env         = @options[:env]
     Log.server.info "Starting server #{Server.env}"
 
     @debug_interface = DebugInterface.new(self)
@@ -32,12 +31,12 @@ class Server
     EventMachine.stop
   end
 
-  def self.connections
-    @@connections ||= []
-  end
-
   def self.env
     @@env
+  end
+
+  def self.env=(new_env)
+    @@env = new_env
   end
 
   def self.port
@@ -48,12 +47,12 @@ class Server
     @@listen
   end
 
-  def self.env=(new_env)
-    @@env = new_env
+  def self.connections
+    @@connections
   end
 
   def self.connections
-    @@connections
+    @@connections ||= []
   end
 
   def self.messages

@@ -2,7 +2,7 @@ require 'logger'
 
 module Log
   def self.create
-    file             = File.open('./log/server.log', "w+")
+    file             = File.open('./log/server_'+Time.now.to_i.to_s+'.log', "w+")
     file.sync        = true
     @@server_logger  = Logger.new(file)
   end

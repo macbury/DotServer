@@ -8,10 +8,10 @@ describe Connection do
     Connection.any_instance.stub(:send_data)
     Server.stub(:connections).and_return([])
   end
-  
-  it "should idle state on start" do
+
+  it "should have a session object for each new connection" do
     connection                      = Connection.new(0)
-    connection.current_state.should be(:idle)
+    connection.session.should_not be_nil
   end
 
   it "should handle incoming message in one packet" do

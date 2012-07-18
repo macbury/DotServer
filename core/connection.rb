@@ -1,38 +1,16 @@
 require "socket"
 
 class Connection < EM::Connection
-  include AASM
-  AUTHORIZATION_TIMEOUT = 40
+  attr_accessor :session
   BufferLimit           = 2048
 
-  aasm column: :current_state do
-    state :idle, initial: true
-    state :authorization
-    state :game
-    state :finished
-
-    event :start do
-      transitions to: :authorization, from: :idle, enter: :start_authorization_timeout, exit: :end_authorization_timeout
-    end
-
-    event :authorize do
-      transitions from: :authorization, to: :game
-    end
-
-    event :unauthorized do
-      transitions from: :authorization, to: :finish, enter: :send_unauthorized_status 
-    end
-
-    event :finish do
-      transitions from: [:authorization], to: :finished, enter: :close_connection
-    end
-  end
-
   def post_init
-    @buffer    = nil
-    @port, @ip = Socket.unpack_sockaddr_in(get_peername)
-    Log.server.info "New connection from IP: #{@ip} on port #{@port}"
+    @buffer       = nil
+    @port, @ip    = Socket.unpack_sockaddr_in(get_peername)
+    self.session  = Session.new(self)
     Server.connections << self
+
+    Log.server.info "New connection from IP: #{@ip} on port #{@port}"
     send_data 0x0
   end
 
@@ -61,7 +39,4 @@ class Connection < EM::Connection
     Server.connections.delete(self)
   end
 
-  def send_unauthorized_status
-    
-  end
 end

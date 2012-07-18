@@ -11,6 +11,4 @@ RSpec.configure do |config|
   config.filter_run :focus
   config.include EM::SpecHelper
   config.include ServerHelper
-  #config.order = 'random'
-
 end
