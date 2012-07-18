@@ -3,6 +3,7 @@ require "socket"
 class Connection < EM::Connection
   include AASM
   AUTHORIZATION_TIMEOUT = 40
+  BufferLimit           = 2048
 
   aasm column: :current_state do
     state :idle, initial: true
@@ -44,18 +45,15 @@ class Connection < EM::Connection
   end
 
   def handle_message_build(data)
-    data.strip!
-    if @buffer.nil? && data =~ /#{Regexp.escape(Message::MESSAGE_DELIMETER_START)}/i
-      @buffer = ""
-    end
-
-    @buffer << data unless @buffer.nil?
-
-    if !@buffer.nil? && data =~ /#{Regexp.escape(Message::MESSAGE_DELIMETER_END)}/i
-      Server.messages << Message.parse(@buffer)
+    @buffer = "" if @buffer.nil?
+    @buffer << data.strip
+    if @buffer.match(/(#{Regexp.escape(Message::MESSAGE_DELIMETER_START)}.+#{Regexp.escape(Message::MESSAGE_DELIMETER_END)})/i)
+      Server.messages << Message.parse($1)
       @buffer = nil
+    elsif @buffer.size > Connection::BufferLimit
+      Log.server.warn "IP: #{@ip} on port #{@port} exceed buffer limit!"
+      close_connection
     end
-    Log.server.info data.inspect
   end
 
   def unbind
