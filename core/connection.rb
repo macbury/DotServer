@@ -44,6 +44,7 @@ class Connection < EM::Connection
   end
 
   def handle_message_build(data)
+    data.strip!
     if @buffer.nil? && data =~ /#{Regexp.escape(Message::MESSAGE_DELIMETER_START)}/i
       @buffer = ""
     end
@@ -52,7 +53,9 @@ class Connection < EM::Connection
 
     if !@buffer.nil? && data =~ /#{Regexp.escape(Message::MESSAGE_DELIMETER_END)}/i
       Server.messages << Message.parse(@buffer)
+      @buffer = nil
     end
+    Log.server.info data.inspect
   end
 
   def unbind

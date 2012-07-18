@@ -59,5 +59,9 @@ class Server
   def self.messages
     @@messages ||= []
   end
+  
+  def self.messages=(new_messages)
+    @@messages = new_messages
+  end
 end
 
