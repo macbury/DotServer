@@ -3,6 +3,7 @@ class Message
   MESSAGE_DELIMETER_START               = '\u0000'
   MESSAGE_DELIMETER_END                 = '\xFF'
   MESSAGE_TIMEOUT                       = 20
+  Regexp                                = /(#{Regexp.escape(Message::MESSAGE_DELIMETER_START)}.+#{Regexp.escape(Message::MESSAGE_DELIMETER_END)})/i
 
   def self.build(controller, action, params={})
     message                 = Message.new
@@ -10,6 +11,10 @@ class Message
     message.controller_name = controller
     message.params          = params
     message
+  end
+
+  def self.build_error(error_text)
+    Message.build("error", "error", "message" => error_text)
   end
 
   def self.parse(message_string)
@@ -30,6 +35,10 @@ class Message
       params:     self.params
     }
 
-    [Message::MESSAGE_DELIMETER_START, Ascii85.encode(out.to_json), Message::MESSAGE_DELIMETER_END].join("")
+    Message.wrap_in_delimeters(Ascii85.encode(out.to_json))
+  end
+
+  def self.wrap_in_delimeters(content)
+    [Message::MESSAGE_DELIMETER_START, content, Message::MESSAGE_DELIMETER_END].join("")
   end
 end

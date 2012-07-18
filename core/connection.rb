@@ -7,10 +7,10 @@ class Connection < EM::Connection
   def post_init
     @buffer       = nil
     @port, @ip    = Socket.unpack_sockaddr_in(get_peername)
+    Log.server.info "New connection from IP: #{@ip} on port #{@port}"
     self.session  = Session.new(self)
     Server.connections << self
 
-    Log.server.info "New connection from IP: #{@ip} on port #{@port}"
     send_data 0x0
   end
 
@@ -22,14 +22,23 @@ class Connection < EM::Connection
     end
   end
 
+  def deliver(message)
+    send_data message.to_s
+  end
+
+  def deliver_error(error_text)
+    deliver(Message.build_error(error_text))
+  end
+
   def handle_message_build(data)
     @buffer = "" if @buffer.nil?
     @buffer << data.strip
-    if @buffer.match(/(#{Regexp.escape(Message::MESSAGE_DELIMETER_START)}.+#{Regexp.escape(Message::MESSAGE_DELIMETER_END)})/i)
-      Server.messages << Message.parse($1)
+    if @buffer.match(Message::Regexp)
+      self.session.process($1)
       @buffer = nil
     elsif @buffer.size > Connection::BufferLimit
       Log.server.warn "IP: #{@ip} on port #{@port} exceed buffer limit!"
+      deliver_error("Connection buffer exceed!")
       close_connection
     end
   end

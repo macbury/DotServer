@@ -2,7 +2,6 @@ class Server
   
   def initialize(options)
     @@connections = []
-    @@messages    = []
     @options      = options
     @@port        = @options[:port] 
     @@listen      = @options[:listen]
@@ -12,8 +11,6 @@ class Server
     @debug_interface = DebugInterface.new(self)
     Signal.trap("INT")  { stop }
     Signal.trap("TERM") { stop }
-    $stdout.sync = true
-    MessageProcessor.new
   end
 
   def start
@@ -54,14 +51,6 @@ class Server
 
   def self.connections
     @@connections ||= []
-  end
-
-  def self.messages
-    @@messages ||= []
-  end
-  
-  def self.messages=(new_messages)
-    @@messages = new_messages
   end
 end
 

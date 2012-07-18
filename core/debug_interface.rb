@@ -63,7 +63,7 @@ class DebugInterface
     @stat_window.move 3,2
     @stat_window.addstr "environment: #{Server.env}, ip: #{Server.listen}, port: #{Server.port}"
     @stat_window.move 4,2
-    @stat_window.addstr "connections: #{Server.connections.size}, messages: #{Server.messages.size}"
+    @stat_window.addstr "connections: #{Server.connections.size}"
     @stat_window.wrefresh
   end
 

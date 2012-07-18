@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'logger'
+require 'digest/sha1'
 require 'bundler/setup'
 
 Bundler.require :default, :test
@@ -14,4 +15,3 @@ require "core/debug_interface"
 require "core/connection"
 require "core/message"
 require "core/session"
-require "core/message_processor"
