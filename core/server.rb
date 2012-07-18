@@ -13,6 +13,7 @@ class Server
     Signal.trap("INT")  { stop }
     Signal.trap("TERM") { stop }
     $stdout.sync = true
+    MessageProcessor.new
   end
 
   def start
