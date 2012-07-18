@@ -6,6 +6,7 @@ class Server
     @@port        = @options[:port] 
     @@listen      = @options[:listen]
     @@env         = @options[:env]
+    @@server      = self
     Log.server.info "Starting server #{Server.env}"
 
     @debug_interface = DebugInterface.new(self)

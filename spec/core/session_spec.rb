@@ -18,5 +18,6 @@ describe Session do
     connection.session.logout!
 
   end
+  
 
 end

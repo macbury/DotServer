@@ -23,7 +23,7 @@ class Message
     output                   = JSON.parse(Ascii85.decode(message_string))
     message                  = Message.new
     message.action_name      = output["action"]
-    message.controller_name  = output["controller"]
+    message.controller_name  = output["controller"].gsub(/[^a-zA-Z]/i,'')
     message.params           = output["params"]
     message
   end
@@ -35,10 +35,17 @@ class Message
       params:     self.params
     }
 
-    Message.wrap_in_delimeters(Ascii85.encode(out.to_json))
+    Message.wrap_in_delimeters(Ascii85.encode(out.to_json, false))
   end
 
   def self.wrap_in_delimeters(content)
     [Message::MESSAGE_DELIMETER_START, content, Message::MESSAGE_DELIMETER_END].join("")
+  end
+
+  def execute!(connection)
+    constant   = Object
+    controller = constant.const_defined?(controller_name) ? constant.const_get(controller_name) : constant.const_missing(controller_name)
+    controller = controller.new(connection)
+    controller.send("#{Controller::ServerPrefix}_#{action_name}", params)
   end
 end

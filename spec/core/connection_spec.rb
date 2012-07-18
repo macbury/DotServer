@@ -15,7 +15,7 @@ describe Connection do
   end
 
   it "should handle incoming message in one packet" do
-    send_message                    = Message.build("foo", "bar", "a" => "b")
+    send_message                    = Message.build("FooController", "bar", "a" => "b")
     connection                      = Connection.new(0)
     connection.session.current_message.should be_nil
 
@@ -29,7 +29,7 @@ describe Connection do
   end
 
   it "should handle incoming message in parts" do  
-    send_message                    = Message.build("foo", "a" => "b")
+    send_message                    = Message.build("FooController", "bar", "a" => "b")
     connection                      = Connection.new(0)
     connection.session.current_message.should be_nil
 
@@ -61,4 +61,6 @@ describe Connection do
     connection.should_receive(:deliver_error).at_least(1)
     connection.handle_message_build(Message.wrap_in_delimeters("blablablabl"))
   end
+
+
 end
