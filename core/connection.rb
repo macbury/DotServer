@@ -4,7 +4,7 @@ class Connection < EM::Connection
   include AASM
   AUTHORIZATION_TIMEOUT = 40
 
-  aasm :column => :current_state do
+  aasm column: :current_state do
     state :idle, initial: true
     state :authorization
     state :game
@@ -28,6 +28,7 @@ class Connection < EM::Connection
   end
 
   def post_init
+    @buffer    = nil
     @port, @ip = Socket.unpack_sockaddr_in(get_peername)
     Log.server.info "New connection from IP: #{@ip} on port #{@port}"
     Server.connections << self
@@ -38,10 +39,22 @@ class Connection < EM::Connection
     if data == 0x0
       send_data 0x0
     else
-      send_data ">>>you sent: #{data}"
+      handle_message_build(data)
     end
-    close_connection if data =~ /quit/i
-  end    
+  end
+
+  def handle_message_build(data)
+    if @buffer.nil? && data =~ /#{Regexp.escape(Message::MESSAGE_DELIMETER_START)}/i
+      @buffer = ""
+    end
+
+    @buffer << data unless @buffer.nil?
+
+    if !@buffer.nil? && data =~ /#{Regexp.escape(Message::MESSAGE_DELIMETER_END)}/i
+      message = Message.parse(@buffer)
+      Log.server.info message.inspect
+    end
+  end
 
   def unbind
     Log.server.info "Connection closed for #{@ip}"
