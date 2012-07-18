@@ -51,8 +51,7 @@ class Connection < EM::Connection
     @buffer << data unless @buffer.nil?
 
     if !@buffer.nil? && data =~ /#{Regexp.escape(Message::MESSAGE_DELIMETER_END)}/i
-      message = Message.parse(@buffer)
-      Log.server.info message.inspect
+      Server.messages << Message.parse(@buffer)
     end
   end
 

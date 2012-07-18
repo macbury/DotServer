@@ -11,6 +11,9 @@ describe Connection do
     send_message                    = Message.build("foo", "bar", a: "b")
     connection                      = Connection.new(0)
     connection.handle_message_build(send_message.to_s)
+    
+    Server.messages.should_not be_empty
+    Server.messages.size.should == 1
   end
 
 end

@@ -2,6 +2,7 @@ class Server
   
   def initialize(options)
     @@connections = []
+    @@messages    = []
     @options      = options
     @@port        = @options[:port] 
     @@listen      = @options[:listen]
@@ -53,6 +54,10 @@ class Server
 
   def self.connections
     @@connections
+  end
+
+  def self.messages
+    @@messages ||= []
   end
 end
 
