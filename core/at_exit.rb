@@ -6,7 +6,7 @@ at_exit do
     else
       Log.critical.info $!.to_s
       Log.critical.info $!.backtrace.join("\n")
-      $server.stop if $server
+      Server.context.stop if Server.context
     end
   end
 end

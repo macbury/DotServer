@@ -139,7 +139,7 @@ class AbstractLogger
     trace = trace.map { |l| l.gsub(Server.root, '') }
     trace = trace.reject { |l| l =~ /gems\/daemon[\-_]kit/ }
     trace = trace.reject { |l| l =~ /vendor\/daemon[\-_]kit/ }
-    trace
+    trace.join("\n")
   end
 
   def close

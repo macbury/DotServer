@@ -6,7 +6,6 @@ class Server
     @@port        = @options[:port] 
     @@listen      = @options[:listen]
     @@env         = @options[:env]
-    @@server      = self
     Log.server.info "Starting server #{Server.env}"
 
     @debug_interface = DebugInterface.new(self)
@@ -60,6 +59,10 @@ class Server
 
   def self.root=(new_root_path)
     @@root_path = new_root_path
+  end
+
+  def self.context
+    $server
   end
 end
 
