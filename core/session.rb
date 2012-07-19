@@ -32,9 +32,12 @@ class Session
   def process(message_content)
     begin
       self.current_message = Message.parse(message_content)
-      self.current_message.execute!(self)
     rescue JSON::ParserError => e
       send_error(e, "JSON parse error")
+    end
+
+    begin
+      self.current_message.execute!(self) if self.current_message
     rescue NameError => e
       send_error(e, "Unknown controller")
     rescue NoMethodError => e
@@ -44,8 +47,7 @@ class Session
 
   def send_error(e, send_msg)
     self.connection.deliver_error(send_msg)
-    Log.server.error e.to_s
-    Log.server.debug e.backtrace.join("\n")
+    Log.server.exception e
   end
 
   def start_authorization_timeout

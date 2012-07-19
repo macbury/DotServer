@@ -53,5 +53,13 @@ class Server
   def self.connections
     @@connections ||= []
   end
+
+  def self.root
+    @@root_path
+  end
+
+  def self.root=(new_root_path)
+    @@root_path = new_root_path
+  end
 end
 
