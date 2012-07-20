@@ -12,6 +12,7 @@ require "em-synchrony/mongoid"
 root_path = File.expand_path('./', File.dirname(__FILE__))
 $:.push root_path
 
+require "core/config"
 require "core/server"
 
 Server.root = root_path
