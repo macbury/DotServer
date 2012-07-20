@@ -13,9 +13,8 @@ class DConfig
   end
 
   def self.method_missing(method_name, *args, &block)
-    puts @@configs.inspect
-    if @@configs[method_name].present?
-      @@configs[method_name]
+    if @@configs[method_name.to_s].present?
+      @@configs[method_name.to_s]
     else
       super(method_name, *args, &block)
     end
@@ -23,11 +22,11 @@ class DConfig
   
   def self.default_database
     {
-      name: "dot_server",
-      username: "test",
-      password: "test",
-      port: 80,
-      host: "localhost"
+      "name" => "dot_server",
+      "username" => "test",
+      "password" => "test",
+      "port" => 80,
+      "host" => "localhost"
     }
   end
 
