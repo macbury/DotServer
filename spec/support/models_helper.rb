@@ -14,4 +14,12 @@ module FakeModels
     Connection.new(Time.now.to_i)
   end
 
+  def build_controller(controller_class)
+    controller_class.new(stub_connection)
+  end
+
+  def build_player
+    Player.register("player_#{Time.now.to_i}", "password_#{Time.now.to_i}")
+  end
+
 end

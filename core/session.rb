@@ -13,6 +13,10 @@ class Session
       transitions from: :idle, to: :authorization
     end
 
+    event :play do
+      transitions from: :authorization, to: :ingame
+    end
+
     event :logout do
       transitions from: [:authorization, :ingame], to: :finish
     end
@@ -23,6 +27,11 @@ class Session
     self.current_message = nil
     self.player          = nil
     self.start!
+  end
+
+  def player=(new_player)
+    @player = new_player
+    play! if @player
   end
 
   def disconnect

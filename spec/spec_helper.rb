@@ -1,7 +1,12 @@
 require File.expand_path('../boot.rb', File.dirname(__FILE__))
 require 'em-spec/rspec'
 
-Server.env = "test"
+Server.new(
+  env: "test",
+  config: "./config",
+  listen: "127.0.0.1",
+  port: 15001
+)
 
 Dir[File.dirname(__FILE__)+"/support/**/*.rb"].each { |f| require f }
 

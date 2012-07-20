@@ -54,7 +54,7 @@ class Server
 
   def load_game
     Log.server.info "Loading game scripts..."
-    Dir[File.join(Server.root, 'game/*.rb')].each do |file_path|
+    Dir[File.join(Server.root, 'game/**/*.rb')].each do |file_path|
       Log.server.info "Loading #{file_path}"
       load(file_path)
     end
