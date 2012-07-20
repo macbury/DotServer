@@ -2,3 +2,4 @@
 ._*
 /vendor/gems
 /log/*.log
+/config/*.yml

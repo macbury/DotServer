@@ -13,7 +13,30 @@ class Server
     Signal.trap("TERM") { stop }
   end
 
+  def initDatabase
+    Log.server.info "Configuring connection to MongoDB"
+    Mongoid.configure do |config|
+      config.allow_dynamic_fields           = false
+      config.identity_map_enabled           = false
+      config.include_root_in_json           = true
+      config.include_type_for_serialization = true
+      config.preload_models                 = false
+      config.protect_sensitive_fields       = true
+      config.raise_not_found_error          = false
+      config.skip_version_check             = false
+      config.scope_overwrite_exception      = true
+      config.use_activesupport_time_zone    = false
+      config.use_utc                        = true
+      
+      Log.server.info "Creating connection to mongodb"
+      connection                = EM::Mongo::Connection.new
+      Log.server.info "Selecting DB #{db_name}"
+      config.databaseconnection = connection.db(db_name)
+    end
+  end
+  
   def start
+    #initDatabase
     EventMachine::start_server Server.listen, Server.port, Connection
     Log.server.info "Listening on #{Server.listen}:#{Server.port}"
     if @options[:ui]
