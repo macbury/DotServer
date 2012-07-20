@@ -17,7 +17,7 @@ class ServerCommand < Thor
   
   desc "config", "Create basic config files"
   def config
-    DConfig.write_example("./config/database.yml")
+    DConfig.write_example("./config/database.json")
   end
 end
 

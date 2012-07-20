@@ -3,3 +3,4 @@
 /vendor/gems
 /log/*.log
 /config/*.yml
+/config/*.json
