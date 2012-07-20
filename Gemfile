@@ -5,6 +5,10 @@ gem "ncurses-ruby", require: false
 gem "thor"
 gem "aasm"
 gem "json"
+gem "em-synchrony"
+gem "mongodb"
+gem "mongoid"
+gem "bson_ext"
 gem "Ascii85", require: "ascii85"
 
 group :test do

@@ -16,11 +16,9 @@ class Server
   def start
     EventMachine::start_server Server.listen, Server.port, Connection
     Log.server.info "Listening on #{Server.listen}:#{Server.port}"
-  end
-
-  def enterDebugMode
-    Log.server.info "Binding debug interface"
-    @debug_interface.start
+    if @options[:ui]
+      @debug_interface.start
+    end
   end
 
   def stop

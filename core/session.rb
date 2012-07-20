@@ -1,7 +1,7 @@
 class Session
   include AASM
   AuthorizationTimeout = 20
-  attr_accessor :connection, :current_message
+  attr_accessor :connection, :current_message, :player
 
   aasm do
     state :idle, initial: true
@@ -18,10 +18,10 @@ class Session
     end
   end
 
-
   def initialize(connection)
-    self.connection = connection
+    self.connection      = connection
     self.current_message = nil
+    self.player          = nil
     self.start!
   end
 

@@ -6,7 +6,12 @@ class Connection < EM::Connection
 
   def post_init
     @buffer       = nil
-    @port, @ip    = Socket.unpack_sockaddr_in(get_peername)
+    begin
+      @port, @ip    = Socket.unpack_sockaddr_in(get_peername)
+    rescue Exception => e
+      Log.server.exception(e)
+      close_connection
+    end
     Log.server.info "New connection from IP: #{@ip} on port #{@port}"
     self.session  = Session.new(self)
     Server.connections << self

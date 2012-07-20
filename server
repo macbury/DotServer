@@ -7,11 +7,11 @@ class ServerCommand < Thor
   options listen:   "0.0.0.0"
   options demonize: false
   options env:      "development"
+  options ui:       false
   def start
     throw "demonize unsupported for now time" if options[:demonize]
     EventMachine::run do
       $server = Server.new(options)
-      $server.enterDebugMode if Server.env != "production"
       $server.start
     end
   end

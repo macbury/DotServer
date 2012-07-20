@@ -39,7 +39,7 @@ class DebugInterface
     @stat_window = Ncurses::WINDOW.new(6, 80, 0, 0)
     @stat_window.bkgd(Ncurses.COLOR_PAIR(3))
     @stat_window.box(0, 0)
-    @stat_window.mvaddstr(0, 0, "DoT server: running ")
+    @stat_window.mvaddstr(0, 0, ".dot server: running ")
     @stat_window.wrefresh()
   end
 
