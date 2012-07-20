@@ -11,7 +11,7 @@ class ServerCommand < Thor
   options ui:       false
   def start
     throw "demonize unsupported for now time" if options[:demonize]
-    EventMachine.synchrony do
+    EventMachine.run do
       Server.new(options).start
     end
   end
@@ -19,6 +19,15 @@ class ServerCommand < Thor
   desc "config", "Create basic config files"
   def config
     DConfig.write_example("./config/database.json")
+  end
+
+  desc "console", "Start server in console mode"
+  options env:      "development"
+  options config:   "./config/"
+  def console
+    require "pry"
+    Server.new(options)
+    Pry.start
   end
 end
 

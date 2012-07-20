@@ -22,11 +22,8 @@ class DConfig
   
   def self.default_database
     {
-      "name" => "dot_server",
-      "username" => "test",
-      "password" => "test",
-      "port" => 80,
-      "host" => "localhost"
+      :database => "dot_server",
+      :hosts => ["localhost:27017"]
     }
   end
 

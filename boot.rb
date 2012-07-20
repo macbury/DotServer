@@ -6,8 +6,6 @@ require 'bundler/setup'
 Bundler.require :default, :test
 
 require "mongo"
-require "em-synchrony"
-require "em-synchrony/mongoid"
 
 root_path = File.expand_path('./', File.dirname(__FILE__))
 $:.push root_path

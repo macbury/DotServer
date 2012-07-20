@@ -10,6 +10,7 @@ gem "mongodb"
 gem "mongoid"
 gem "bson_ext"
 gem "Ascii85", require: "ascii85"
+gem "pry", require: false
 
 group :test do
   gem "rspec"

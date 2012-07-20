@@ -108,7 +108,7 @@ class AbstractLogger
 
     self.logger.add( self.class.severities[ severity ] ) { message }
 
-    STDOUT.puts( message ) if self.copy_to_stdout
+    DebugInterface.push_log(message) if self.copy_to_stdout
   end
 
   def level
