@@ -7,6 +7,7 @@ class ServerCommand < Thor
   options listen:   "0.0.0.0"
   options demonize: false
   options env:      "development"
+  options config:   "./config/"
   options ui:       false
   def start
     throw "demonize unsupported for now time" if options[:demonize]

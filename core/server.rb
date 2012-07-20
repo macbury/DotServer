@@ -13,7 +13,14 @@ class Server
     Signal.trap("TERM") { stop }
   end
 
-  def initDatabase
+  def load_configuration
+    config_path = File.expand_path(@options[:config], Server.root)
+    Log.server.info "Loading configuration files from #{config_path}"
+    DConfig.load(File.join(config_path, "database.json"))
+    puts DConfig.database.inspect
+  end
+
+  def init_database
     Log.server.info "Configuring connection to MongoDB"
     Mongoid.configure do |config|
       config.allow_dynamic_fields           = false
@@ -36,7 +43,8 @@ class Server
   end
   
   def start
-    #initDatabase
+    load_configuration
+    #init_database
     EventMachine::start_server Server.listen, Server.port, Connection
     Log.server.info "Listening on #{Server.listen}:#{Server.port}"
     if @options[:ui]

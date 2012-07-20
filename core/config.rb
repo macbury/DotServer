@@ -8,11 +8,12 @@ class DConfig
 
     if respond_to?("default_#{name}")
       default_config = self.send("default_#{name}")
-      @@configs[name].merge!() 
+      @@configs[name] = default_config.merge(@@configs[name]) 
     end
   end
 
   def self.method_missing(method_name, *args, &block)
+    puts @@configs.inspect
     if @@configs[method_name].present?
       @@configs[method_name]
     else
