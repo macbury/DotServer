@@ -5,6 +5,7 @@ class Config
     name            = File.basename(file_path).gsub(/\..+/i,'')
     config          = JSON.parse(File.open(file_path, "r").read)
     @@configs[name] = config[Server.env]
+    @@configs[name].merge!(self.send("default_#{file_path}")) if respond_to?("default_#{file_path}")
   end
 
   def self.method_missing(method_name, args*, &block)
@@ -15,5 +16,5 @@ class Config
     end
   end
 
-
+  
 end
