@@ -8,7 +8,7 @@ class AuthorizationController < Controller
       self.session.player = player
       self.session.send_message("GameController", "setup", player.bootup_package)
     else
-      Log.server.info "Player #{player.login} could not log in"
+      Log.server.info "Player could not log in"
       self.session.deliver_error("Wrong login or password")
       self.session.logout!
     end

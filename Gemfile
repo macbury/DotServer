@@ -5,6 +5,7 @@ gem "ncurses-ruby", require: false
 gem "thor"
 gem "aasm"
 gem "json"
+gem "em-websocket"
 gem "em-synchrony"
 gem "mongodb"
 gem "mongoid"
