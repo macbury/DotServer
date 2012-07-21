@@ -54,6 +54,10 @@ class Session
     end
   end
 
+  def send_message(controller, action, options=nil)
+    self.connection.deliver(Message.build(controller, action, options))
+  end
+
   def send_error(e, send_msg)
     self.connection.deliver_error(send_msg)
     Log.server.exception e

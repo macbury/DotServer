@@ -16,4 +16,8 @@ class Player
   def self.auth(login, password)
     player = Player.find_by login: login, password_hash: password
   end
+
+  def bootup_package
+    { x: 0, y: 0, map: 'eee' }
+  end
 end

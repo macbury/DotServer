@@ -15,7 +15,7 @@ module FakeModels
   end
 
   def build_controller(controller_class)
-    controller_class.new(stub_connection)
+    controller_class.new(stub_connection.session)
   end
 
   def build_player
