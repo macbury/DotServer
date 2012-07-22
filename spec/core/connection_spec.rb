@@ -10,13 +10,13 @@ describe Connection do
   end
 
   it "should have a session object for each new connection" do
-    connection                      = Connection.new(0)
+    connection                      = stub_connection
     connection.session.should_not be_nil
   end
 
   it "should handle incoming message in one packet" do
     send_message                    = Message.build("FooController", "bar", "a" => "b")
-    connection                      = Connection.new(0)
+    connection                      = stub_connection
     connection.session.current_message.should be_nil
 
     connection.handle_message_build(send_message.to_s)
@@ -30,7 +30,7 @@ describe Connection do
 
   it "should handle incoming message in parts" do  
     send_message                    = Message.build("FooController", "bar", "a" => "b")
-    connection                      = Connection.new(0)
+    connection                      = stub_connection
     connection.session.current_message.should be_nil
 
     send_message.to_s.chars.to_a.each do |letter|
@@ -46,7 +46,7 @@ describe Connection do
   end
   
   it "should close connection after buffer limit is exceed" do
-    connection = Connection.new(0)
+    connection = stub_connection
     connection.should_receive(:deliver_error).at_least(1)
     connection.should_receive(:close_connection).at_least(1)
     
@@ -57,7 +57,7 @@ describe Connection do
   end
 
   it "should throw exception on invalid data" do
-    connection = Connection.new(0)
+    connection = stub_connection
     connection.should_receive(:deliver_error).at_least(1)
     connection.handle_message_build(Message.wrap_in_delimeters("blablablabl"))
   end

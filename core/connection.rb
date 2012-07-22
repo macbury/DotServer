@@ -1,6 +1,6 @@
 require "socket"
 
-class Connection
+class Connection < EM::Connection
   attr_accessor :session
   BufferLimit           = 2048
 
